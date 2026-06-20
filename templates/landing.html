@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apparel Inventory and Management System</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .landing-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+      .landing-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      }
+      .card-img-overlay {
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .btn-landing {
+        border-radius: 30px;
+        padding: 10px 30px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container py-5">
+      <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">
+          Apparel Inventory and Management System
+        </h1>
+        <p class="lead">Choose an option to continue</p>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-md-5 mb-4">
+          <div class="card landing-card h-100 text-white">
+            <img
+              src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+              class="card-img h-100"
+              alt="Admin"
+              style="object-fit: cover; height: 400px"
+            />
+            <div class="card-img-overlay">
+              <h2 class="card-title mb-4">Admin Panel</h2>
+              <p class="card-text mb-4">
+                Manage inventory, process orders, and handle business
+                operations.
+              </p>
+              <a
+                href="{{ url_for('login') }}"
+                class="btn btn-primary btn-landing"
+              >
+                <i class="fas fa-user-shield me-2"></i>Admin Login
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-5 mb-4">
+          <div class="card landing-card h-100 text-white">
+            <img
+              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+              class="card-img h-100"
+              alt="Shop"
+              style="object-fit: cover; height: 400px"
+            />
+            <div class="card-img-overlay">
+              <h2 class="card-title mb-4">Online Store</h2>
+              <p class="card-text mb-4">
+                Browse products, place orders, and track your purchases.
+              </p>
+              <a
+                href="{{ url_for('shop') }}"
+                class="btn btn-success btn-landing"
+              >
+                <i class="fas fa-shopping-cart me-2"></i>Go Shopping
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+      <div class="container text-center">
+        <p class="mb-0">
+          &copy; 2023 Apparel Inventory and Management System. All rights
+          reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

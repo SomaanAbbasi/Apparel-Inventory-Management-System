@@ -1,0 +1,104 @@
+{% extends "shop/base.html" %} {% block title %}Shop - Apparel Store{% endblock
+%} {% block content %}
+<div class="row">
+  <!-- Sidebar -->
+  <div class="col-lg-3">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">Categories</h5>
+      </div>
+      <div class="card-body">
+        <div class="list-group">
+          <a
+            href="{{ url_for('shop') }}"
+            class="list-group-item list-group-item-action {% if not current_category %}active{% endif %}"
+          >
+            All Categories
+          </a>
+          {% for category in categories %}
+          <a
+            href="{{ url_for('shop', category=category) }}"
+            class="list-group-item list-group-item-action {% if current_category == category %}active{% endif %}"
+          >
+            {{ category }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products -->
+  <div class="col-lg-9">
+    {% if search_query %}
+    <h2 class="mb-4">Search Results for "{{ search_query }}"</h2>
+    {% elif current_category %}
+    <h2 class="mb-4">{{ current_category }}</h2>
+    {% else %}
+    <h2 class="mb-4">All Products</h2>
+    {% endif %} {% if not products %}
+    <div class="alert alert-info">No products found.</div>
+    {% endif %}
+
+    <div class="row">
+      {% for product in products %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div
+            class="card-img-top bg-light d-flex align-items-center justify-content-center"
+            style="height: 200px"
+          >
+            {% if product.image_url %}
+            <img
+              src="{{ product.image_url }}"
+              alt="{{ product.name }}"
+              class="img-fluid"
+              style="max-height: 180px"
+            />
+            {% else %}
+            <div class="text-center p-4">
+              <i class="fas fa-tshirt fa-4x text-secondary"></i>
+            </div>
+            {% endif %}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text text-muted">{{ product.category }}</p>
+            <p class="card-text fw-bold">${{ "%.2f"|format(product.price) }}</p>
+            <div class="d-flex justify-content-between">
+              <a
+                href="{{ url_for('product_detail', product_id=product.id) }}"
+                class="btn btn-outline-primary"
+                >View Details</a
+              >
+              <form
+                method="POST"
+                action="{{ url_for('add_to_cart', product_id=product.id) }}"
+              >
+                <input type="hidden" name="quantity" value="1" />
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-cart-plus"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">
+              {% if product.quantity_in_stock > 20 %}
+              <span class="text-success">In Stock</span>
+              {% elif product.quantity_in_stock > 0 %}
+              <span class="text-warning"
+                >Only {{ product.quantity_in_stock }} left</span
+              >
+              {% else %}
+              <span class="text-danger">Out of Stock</span>
+              {% endif %}
+            </small>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %} {% block title %}Add Supplier - Apparel Inventory
+System{% endblock %} {% block header %}Add Supplier{% endblock %} {% block
+header_buttons %}
+<a href="{{ url_for('suppliers') }}" class="btn btn-sm btn-secondary">
+  <i class="fas fa-arrow-left me-1"></i> Back to Suppliers
+</a>
+{% endblock %} {% block content %}
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <form method="POST" action="{{ url_for('add_supplier') }}">
+          <div class="mb-3">
+            <label for="name" class="form-label">Supplier Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="name"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input
+              type="text"
+              class="form-control"
+              id="phone"
+              name="phone"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" />
+          </div>
+          <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <textarea
+              class="form-control"
+              id="address"
+              name="address"
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Save Supplier</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

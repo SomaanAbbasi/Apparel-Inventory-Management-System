@@ -1,0 +1,80 @@
+{% extends "base.html" %} {% block title %}Add Product - Apparel Inventory
+System{% endblock %} {% block header %}Add Product{% endblock %} {% block
+header_buttons %}
+<a href="{{ url_for('products') }}" class="btn btn-sm btn-secondary">
+  <i class="fas fa-arrow-left me-1"></i> Back to Products
+</a>
+{% endblock %} {% block content %}
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <form method="POST" action="{{ url_for('add_product') }}">
+          <div class="mb-3">
+            <label for="name" class="form-label">Product Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="name"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" id="category" name="category" required>
+              <option value="">Select Category</option>
+              <option value="T-Shirts">T-Shirts</option>
+              <option value="Shirts">Shirts</option>
+              <option value="Pants">Pants</option>
+              <option value="Jeans">Jeans</option>
+              <option value="Dresses">Dresses</option>
+              <option value="Jackets">Jackets</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Footwear">Footwear</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input
+                type="number"
+                class="form-control"
+                id="price"
+                name="price"
+                step="0.01"
+                min="0"
+                required
+              />
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="quantity" class="form-label">Quantity in Stock</label>
+            <input
+              type="number"
+              class="form-control"
+              id="quantity"
+              name="quantity"
+              min="0"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea
+              class="form-control"
+              id="description"
+              name="description"
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Save Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

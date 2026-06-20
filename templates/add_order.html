@@ -1,0 +1,188 @@
+{% extends "base.html" %} {% block title %}Create Order - Apparel Inventory
+System{% endblock %} {% block header %}Create Order{% endblock %} {% block
+header_buttons %}
+<a href="{{ url_for('orders') }}" class="btn btn-sm btn-secondary">
+  <i class="fas fa-arrow-left me-1"></i> Back to Orders
+</a>
+{% endblock %} {% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+        <form method="POST" action="{{ url_for('add_order') }}" id="orderForm">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="customer_id" class="form-label">Customer</label>
+              <select
+                class="form-select"
+                id="customer_id"
+                name="customer_id"
+                required
+              >
+                <option value="">Select Customer</option>
+                {% for customer in customers %}
+                <option value="{{ customer.id }}">{{ customer.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="payment_method" class="form-label"
+                >Payment Method</label
+              >
+              <select
+                class="form-select"
+                id="payment_method"
+                name="payment_method"
+                required
+              >
+                <option value="">Select Payment Method</option>
+                <option value="Cash">Cash</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Debit Card">Debit Card</option>
+                <option value="PayPal">PayPal</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+              </select>
+            </div>
+          </div>
+
+          <h5 class="mb-3">Order Items</h5>
+          <div id="orderItems">
+            <div class="row mb-3 order-item">
+              <div class="col-md-5">
+                <label class="form-label">Product</label>
+                <select
+                  class="form-select product-select"
+                  name="product_id[]"
+                  required
+                >
+                  <option value="">Select Product</option>
+                  {% for product in products %}
+                  <option
+                    value="{{ product.id }}"
+                    data-price="{{ product.price }}"
+                    data-stock="{{ product.quantity_in_stock }}"
+                  >
+                    {{ product.name }} - ${{ "%.2f"|format(product.price) }} ({{
+                    product.quantity_in_stock }} in stock)
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Quantity</label>
+                <input
+                  type="number"
+                  class="form-control quantity-input"
+                  name="quantity[]"
+                  min="1"
+                  value="1"
+                  required
+                />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Subtotal</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="text" class="form-control subtotal" readonly />
+                </div>
+              </div>
+              <div class="col-md-1 d-flex align-items-end">
+                <button
+                  type="button"
+                  class="btn btn-danger remove-item mb-0"
+                  disabled
+                >
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <button
+              type="button"
+              id="addItemBtn"
+              class="btn btn-sm btn-secondary"
+            >
+              <i class="fas fa-plus me-1"></i> Add Another Item
+            </button>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6 offset-md-6">
+              <div class="card bg-light">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>Total:</span>
+                    <span id="orderTotal">$0.00</span>
+                  </div>
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                      Create Order
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  $(document).ready(function () {
+    // Calculate subtotal when product or quantity changes
+    $(document).on("change", ".product-select, .quantity-input", function () {
+      const row = $(this).closest(".order-item");
+      const productSelect = row.find(".product-select");
+      const quantityInput = row.find(".quantity-input");
+      const subtotalInput = row.find(".subtotal");
+
+      if (productSelect.val()) {
+        const price = parseFloat(productSelect.find(":selected").data("price"));
+        const stock = parseInt(productSelect.find(":selected").data("stock"));
+        const quantity = parseInt(quantityInput.val());
+
+        // Limit quantity to available stock
+        if (quantity > stock) {
+          quantityInput.val(stock);
+          alert("Quantity adjusted to match available stock");
+        }
+
+        const subtotal = price * parseInt(quantityInput.val());
+        subtotalInput.val(subtotal.toFixed(2));
+      } else {
+        subtotalInput.val("");
+      }
+
+      calculateTotal();
+    });
+
+    // Add new item row
+    $("#addItemBtn").click(function () {
+      const newRow = $("#orderItems .order-item:first").clone();
+      newRow.find("select, input").val("");
+      newRow.find(".remove-item").prop("disabled", false);
+      $("#orderItems").append(newRow);
+    });
+
+    // Remove item row
+    $(document).on("click", ".remove-item", function () {
+      $(this).closest(".order-item").remove();
+      calculateTotal();
+    });
+
+    // Calculate order total
+    function calculateTotal() {
+      let total = 0;
+      $(".subtotal").each(function () {
+        const subtotal = parseFloat($(this).val()) || 0;
+        total += subtotal;
+      });
+      $("#orderTotal").text("$" + total.toFixed(2));
+    }
+  });
+</script>
+{% endblock %}

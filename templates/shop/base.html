@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Apparel Store{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/shop.css') }}"
+    />
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('shop') }}">Apparel Store</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'shop' %}active{% endif %}"
+                href="{{ url_for('shop') }}"
+                >Shop</a
+              >
+            </li>
+            {% if current_user.is_authenticated and current_user.customer_id %}
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'my_orders' %}active{% endif %}"
+                href="{{ url_for('my_orders') }}"
+                >My Orders</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+          <form class="d-flex me-2" action="{{ url_for('shop') }}" method="GET">
+            <input
+              class="form-control me-2"
+              type="search"
+              name="search"
+              placeholder="Search products"
+              aria-label="Search"
+              value="{{ search_query or '' }}"
+            />
+            <button class="btn btn-light" type="submit">Search</button>
+          </form>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a
+                class="nav-link position-relative"
+                href="{{ url_for('cart') }}"
+              >
+                <i class="fas fa-shopping-cart"></i> Cart {% if
+                session.get('cart') %}
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                >
+                  {{ session.get('cart')|length }}
+                </span>
+                {% endif %}
+              </a>
+            </li>
+            {% if current_user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fas fa-user-circle"></i> {{ current_user.username }}
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdown"
+              >
+                {% if current_user.customer_id %}
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('my_orders') }}"
+                    >My Orders</a
+                  >
+                </li>
+                {% endif %}
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('logout') }}"
+                    >Logout</a
+                  >
+                </li>
+              </ul>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('shop_login') }}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('shop_register') }}"
+                >Register</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div
+        class="alert alert-{{ category }} alert-dismissible fade show"
+        role="alert"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-5 py-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h5>Apparel Store</h5>
+            <p>Your one-stop shop for quality clothing and accessories.</p>
+          </div>
+          <div class="col-md-4">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="{{ url_for('shop') }}" class="text-white">Shop</a>
+              </li>
+              <li>
+                <a href="{{ url_for('cart') }}" class="text-white">Cart</a>
+              </li>
+              {% if current_user.is_authenticated %}
+              <li>
+                <a href="{{ url_for('my_orders') }}" class="text-white"
+                  >My Orders</a
+                >
+              </li>
+              {% else %}
+              <li>
+                <a href="{{ url_for('shop_login') }}" class="text-white"
+                  >Login</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('shop_register') }}" class="text-white"
+                  >Register</a
+                >
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h5>Contact Us</h5>
+            <address>
+              <i class="fas fa-map-marker-alt me-2"></i> 123 Fashion Street<br />
+              <i class="fas fa-phone me-2"></i> (123) 456-7890<br />
+              <i class="fas fa-envelope me-2"></i> info@apparelstore.com
+            </address>
+          </div>
+        </div>
+        <hr />
+        <div class="text-center">
+          <p class="mb-0">&copy; 2023 Apparel Store. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/shop.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Product - Apparel Inventory System{% endblock %}
+
+{% block header %}Edit Product{% endblock %}
+
+{% block header_buttons %}
+<a href="{{ url_for('products') }}" class="btn btn-sm btn-secondary">
+    <i class="fas fa-arrow-left me-1"></i> Back to Products
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('edit_product', product_id=product.id) }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="T-Shirts" {% if product.category == 'T-Shirts' %}selected{% endif %}>T-Shirts</option>
+                            <option value="Shirts" {% if product.category == 'Shirts' %}selected{% endif %}>Shirts</option>
+                            <option value="Pants" {% if product.category == 'Pants' %}selected{% endif %}>Pants</option>
+                            <option value="Jeans" {% if product.category == 'Jeans' %}selected{% endif %}>Jeans</option>
+                            <option value="Dresses" {% if product.category == 'Dresses' %}selected{% endif %}>Dresses</option>
+                            <option value="Jackets" {% if product.category == 'Jackets' %}selected{% endif %}>Jackets</option>
+                            <option value="Accessories" {% if product.category == 'Accessories' %}selected{% endif %}>Accessories</option>
+                            <option value="Footwear" {% if product.category == 'Footwear' %}selected{% endif %}>Footwear</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" value="{{ product.price }}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity in Stock</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" min="0" value="{{ product.quantity_in_stock }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">{{ product.description or '' }}</textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Update Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
